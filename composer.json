@@ -14,7 +14,6 @@
             "email": "justlikephp@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": "^8.4",
         "guzzlehttp/guzzle": "8.0.x-dev"
@@ -23,5 +22,14 @@
         "phpstan/phpstan": "2.2.x-dev",
         "phpstan/phpstan-strict-rules": "2.0.x-dev",
         "laravel/pint": "dev-main"
+    },
+    "scripts": {
+        "format": "vendor/bin/pint",
+        "format:test": "vendor/bin/pint --test",
+        "analyse": "vendor/bin/phpstan analyse",
+        "check": [
+            "@format:test",
+            "@analyse"
+        ]
     }
 }
