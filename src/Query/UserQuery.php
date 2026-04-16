@@ -6,6 +6,9 @@ namespace Natedaly\DummyjsonClient\Query;
 
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
 use Natedaly\DummyjsonClient\Dto\UserCollection;
+use Natedaly\DummyjsonClient\Exceptions\DummyJsonException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 final class UserQuery
 {
@@ -17,6 +20,7 @@ final class UserQuery
 
     public function __construct(
         private readonly HttpClient $client,
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {
     }
 
@@ -49,8 +53,21 @@ final class UserQuery
             $query['select'] = implode(',', $this->select);
         }
 
-        return UserCollection::fromArray(
-            $this->client->get('/users', $query),
-        );
+        try {
+            return UserCollection::fromArray(
+                $this->client->get('/users', $query),
+            );
+        } catch (DummyJsonException $exception) {
+            $this->logger->error('Failed to fetch users', [
+                'limit'       => $this->limit,
+                'skip'        => $this->skip,
+                'select'      => $this->select,
+                'exception'   => $exception::class,
+                'message'     => $exception->getMessage(),
+                'status_code' => $exception->statusCode(),
+            ]);
+
+            throw $exception;
+        }
     }
 }
