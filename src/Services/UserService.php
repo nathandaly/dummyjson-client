@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Natedaly\DummyjsonClient\Services;
 
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
+use Natedaly\DummyjsonClient\Contracts\UserServiceInterface;
 use Natedaly\DummyjsonClient\Dto\UserDto;
 use Natedaly\DummyjsonClient\Exceptions\ApiNotFoundException;
 use Natedaly\DummyjsonClient\Query\UserQuery;
 
-final readonly class UserService
+final readonly class UserService implements UserServiceInterface
 {
     public function __construct(
         private HttpClient $client,
