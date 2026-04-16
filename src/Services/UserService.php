@@ -18,8 +18,7 @@ final readonly class UserService implements UserServiceInterface
     public function __construct(
         private HttpClient $client,
         private LoggerInterface $logger = new NullLogger(),
-    ) {
-    }
+    ) {}
 
     public function getById(int $id): UserDto
     {
@@ -33,9 +32,9 @@ final readonly class UserService implements UserServiceInterface
             return UserDto::fromArray($data);
         } catch (DummyJsonException $exception) {
             $this->logger->error('Failed to fetch user', [
-                'user_id'     => $id,
-                'exception'   => $exception::class,
-                'message'     => $exception->getMessage(),
+                'user_id' => $id,
+                'exception' => $exception::class,
+                'message' => $exception->getMessage(),
                 'status_code' => $exception->statusCode(),
             ]);
 
@@ -53,18 +52,18 @@ final readonly class UserService implements UserServiceInterface
         try {
             $data = $this->client->post('/users/add', [
                 'firstName' => $firstName,
-                'lastName'  => $lastName,
-                'email'     => $email,
+                'lastName' => $lastName,
+                'email' => $email,
             ]);
 
             return UserDto::fromArray($data);
         } catch (DummyJsonException $exception) {
             $this->logger->error('Failed to create user', [
-                'first_name'  => $firstName,
-                'last_name'   => $lastName,
-                'email'       => $email,
-                'exception'   => $exception::class,
-                'message'     => $exception->getMessage(),
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'exception' => $exception::class,
+                'message' => $exception->getMessage(),
                 'status_code' => $exception->statusCode(),
             ]);
 

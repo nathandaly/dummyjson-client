@@ -25,8 +25,7 @@ final readonly class GuzzleHttpClient implements HttpClient
 {
     public function __construct(
         private ClientInterface $client,
-    ) {
-    }
+    ) {}
 
     public static function make(
         string $baseUri,

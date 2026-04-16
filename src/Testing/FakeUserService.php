@@ -33,7 +33,7 @@ final class FakeUserService implements UserServiceInterface
         $httpClient = new FakeHttpClient();
         $httpClient->queue([
             'users' => array_values(array_map(
-                static fn (UserDto $user): array => $user->toArray(),
+                static fn(UserDto $user): array => $user->toArray(),
                 $this->users,
             )),
             'total' => count($this->users),

@@ -21,8 +21,7 @@ final class UserQuery
     public function __construct(
         private readonly HttpClient $client,
         private readonly LoggerInterface $logger = new NullLogger(),
-    ) {
-    }
+    ) {}
 
     public function limit(int $limit): self
     {
@@ -59,11 +58,11 @@ final class UserQuery
             );
         } catch (DummyJsonException $exception) {
             $this->logger->error('Failed to fetch users', [
-                'limit'       => $this->limit,
-                'skip'        => $this->skip,
-                'select'      => $this->select,
-                'exception'   => $exception::class,
-                'message'     => $exception->getMessage(),
+                'limit' => $this->limit,
+                'skip' => $this->skip,
+                'select' => $this->select,
+                'exception' => $exception::class,
+                'message' => $exception->getMessage(),
                 'status_code' => $exception->statusCode(),
             ]);
 

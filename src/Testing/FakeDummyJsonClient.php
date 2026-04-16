@@ -11,8 +11,7 @@ final class FakeDummyJsonClient implements DummyJsonClientInterface
 {
     public function __construct(
         private readonly UserServiceInterface $users,
-    ) {
-    }
+    ) {}
 
     public function users(): UserServiceInterface
     {

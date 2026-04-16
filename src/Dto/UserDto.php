@@ -16,8 +16,7 @@ final readonly class UserDto implements JsonSerializable
         public string $firstName,
         public string $lastName,
         public string $email,
-    ) {
-    }
+    ) {}
 
     public function jsonSerialize(): array
     {

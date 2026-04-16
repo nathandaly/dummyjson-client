@@ -19,8 +19,7 @@ final class Client implements DummyJsonClientInterface
     public function __construct(
         private readonly HttpClient $httpClient,
         private readonly LoggerInterface $logger = new NullLogger(),
-    ) {
-    }
+    ) {}
 
     public static function make(
         string $baseUri,

@@ -11,8 +11,7 @@ final readonly class UserCollection
         public int $total,
         public int $skip,
         public int $limit,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
