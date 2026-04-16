@@ -91,22 +91,4 @@ class UserServiceTest extends TestCase
 
         $this->assertSame(208, $result->id);
     }
-
-    #[Test]
-    public function it_posts_required_fields_when_creating_a_user(): void
-    {
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_maps_the_response_data_to_dto_with_validations(): void
-    {
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function it_wraps_transport_failure_in_a_domain_exception(): void
-    {
-        $this->assertTrue(true);
-    }
 }
