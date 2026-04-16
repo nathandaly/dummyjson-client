@@ -36,7 +36,30 @@ class UserServiceTest extends TestCase
     #[Test]
     public function it_retrieves_a_paginated_list_of_users(): void
     {
-        $this->assertTrue(true);
+        $client = $this->createMock(HttpClient::class);
+        $client->expects($this->once())
+            ->method('get')
+            ->with('/users', ['limit' => 10, 'skip' => 0])
+            ->willReturn([
+                'users' => [
+                    ['id' => 1, 'firstName' => 'Cecil', 'lastName' => 'Stedman', 'email' => 'cecil.stedman@example.com'],
+                    ['id' => 2, 'firstName' => 'Damien', 'lastName' => 'Darkblood', 'email' => 'damien.darkblood@example.com'],
+                ],
+                'total' => 208,
+                'skip' => 0,
+                'limit' => 10,
+            ]);
+
+        $result = new UserService($client)->getUsers(limit: 10, skip: 0);
+
+        $this->assertCount(2, $result->users);
+        $this->assertSame(208, $result->total);
+        $this->assertSame(0, $result->skip);
+        $this->assertSame(10, $result->limit);
+        $this->assertSame(1, $result->users[0]->id);
+        $this->assertSame('Cecil', $result->users[0]->firstName);
+        $this->assertSame(2, $result->users[1]->id);
+        $this->assertSame('Damien', $result->users[1]->firstName);
     }
 
     #[Test]
