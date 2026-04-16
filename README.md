@@ -295,6 +295,10 @@ composer check
 
 `composer check` runs formatting checks, PHPStan analysis, and the PHPUnit test suite.
 
+## GitHub Actions
+
+I added a simple GitHub Actions workflow to validate the repository status when committing or merging to `main`. The workflow installs Composer dependencies and runs `composer check`, so formatting, static analysis, and tests are checked before changes land on the main branch.
+
 ## How I Used AI
 
 I used AI as an assistant, not as the decision-maker for the package.
