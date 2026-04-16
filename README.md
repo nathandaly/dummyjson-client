@@ -1,5 +1,7 @@
 # DummyJSON Client
 
+[![PHP Composer](https://github.com/nathandaly/dummyjson-client/actions/workflows/php.yml/badge.svg)](https://github.com/nathandaly/dummyjson-client/actions/workflows/php.yml)
+
 A small, framework-independent PHP client for [DummyJSON](https://dummyjson.com/) user data.
 
 The package is designed as a Composer library rather than a framework package. It can be used directly in plain PHP, or registered inside a DI container in Laravel, Symfony, Slim, Laminas, or any other PHP tooling that can bind interfaces to implementations.
