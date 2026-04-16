@@ -60,6 +60,17 @@ The package is split into small layers with clear responsibilities:
 
 The main design choice is to keep the core package framework-agnostic. There are no Laravel, Symfony, or container-specific assumptions inside the client. Frameworks can wire the package however they like, while the library stays plain PHP.
 
+The client contract exposes domain services through methods such as `users()`:
+
+```php
+interface DummyJsonClientInterface
+{
+    public function users(): UserServiceInterface;
+}
+```
+
+That gives the package a clear extension path. `users()` is the first supported DummyJSON context, but the same pattern could be extended later with methods such as `recipes()`, `products()`, or any other resource DummyJSON exposes, each returning its own focused service interface.
+
 I started down the normal path of passing pagination parameters directly into the list method. While working through the API design, I decided a dedicated `UserQuery` object would make the consumer experience cleaner. It gives the package a fluent API for pagination and field selection, keeps the service interface small, and leaves room for future query options without turning one method into a long list of optional parameters.
 
 ## Technical Test Goals
