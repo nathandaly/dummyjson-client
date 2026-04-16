@@ -29,8 +29,8 @@
         "test": "phpunit",
         "test:unit": "phpunit --testsuite Unit",
         "analyse": "phpstan analyse",
-        "format": "pint",
-        "format:test": "pint --test",
+        "format": "vendor/bin/pint src tests",
+        "format:test": "vendor/bin/pint --test src tests",
         "check": [
             "@format:test",
             "@analyse",
