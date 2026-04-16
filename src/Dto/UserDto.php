@@ -18,6 +18,9 @@ final readonly class UserDto implements JsonSerializable
         public string $email,
     ) {}
 
+    /**
+     * @return array<string, mixed>
+     */
     public function jsonSerialize(): array
     {
         return $this->toArray();

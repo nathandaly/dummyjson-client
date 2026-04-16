@@ -25,7 +25,7 @@ final readonly class UserService implements UserServiceInterface
         try {
             $data = $this->client->get("/users/{$id}");
 
-            if (empty($data)) {
+            if ($data === []) {
                 throw new ApiNotFoundException('User not found');
             }
 

@@ -6,6 +6,9 @@ namespace Natedaly\DummyjsonClient\Dto;
 
 final readonly class UserCollection
 {
+    /**
+     * @param UserDto[] $users
+     */
     public function __construct(
         public array $users,
         public int $total,
@@ -13,6 +16,9 @@ final readonly class UserCollection
         public int $limit,
     ) {}
 
+    /**
+     * @param array{users: array<int, array<string, mixed>>, total: int, skip: int, limit: int} $data
+     */
     public static function fromArray(array $data): self
     {
         return new self(

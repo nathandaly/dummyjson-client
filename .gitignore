@@ -1,9 +1,18 @@
 /vendor/
-.claude
-.idea
-.junie
-.cursor
+/var/
+/.phpunit.cache/
+/.phpstan.cache/
+
+.idea/
+.cursor/
+.claude/
+.junie/
 
 .DS_Store
+Thumbs.db
 
-.phpunit.cache/
+coverage/
+build/
+dist/
+
+composer.lock

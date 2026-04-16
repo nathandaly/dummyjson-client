@@ -8,8 +8,10 @@ use Natedaly\DummyjsonClient\Contracts\HttpClient;
 
 final class FakeHttpClient implements HttpClient
 {
+    /** @var array<int, array<string, mixed>> */
     private array $responses = [];
 
+    /** @param array<string, mixed> $response */
     public function queue(array $response): void
     {
         $this->responses[] = $response;

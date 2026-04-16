@@ -16,6 +16,7 @@ final class UserQuery
 
     private int $skip = 0;
 
+    /** @var array<int, string> */
     private array $select = [];
 
     public function __construct(
@@ -37,6 +38,7 @@ final class UserQuery
         return $this;
     }
 
+    /** @param array<int, string> $fields */
     public function select(array $fields): self
     {
         $this->select = $fields;
@@ -53,9 +55,10 @@ final class UserQuery
         }
 
         try {
-            return UserCollection::fromArray(
-                $this->client->get('/users', $query),
-            );
+            /** @var array{users: array<int, array<string, mixed>>, total: int, skip: int, limit: int} $data */
+            $data = $this->client->get('/users', $query);
+
+            return UserCollection::fromArray($data);
         } catch (DummyJsonException $exception) {
             $this->logger->error('Failed to fetch users', [
                 'limit' => $this->limit,

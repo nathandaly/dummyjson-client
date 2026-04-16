@@ -21,6 +21,9 @@ final class Client implements DummyJsonClientInterface
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public static function make(
         string $baseUri,
         array $options = [],

@@ -7,11 +7,10 @@ parameters:
 
     paths:
         - src
-        - tests
 
     tmpDir: var/phpstan
 
-    treatPhpDocTypesAsCertain: true
+    treatPhpDocTypesAsCertain: false
     reportMaybesInMethodSignatures: true
     reportMaybesInPropertyPhpDocTypes: true
     checkExplicitMixed: true

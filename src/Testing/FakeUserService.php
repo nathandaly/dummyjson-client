@@ -11,6 +11,9 @@ use Natedaly\DummyjsonClient\Query\UserQuery;
 
 final class FakeUserService implements UserServiceInterface
 {
+    /**
+     * @var array<int, UserDto>
+     */
     private array $users = [];
 
     private int $nextId = 1;

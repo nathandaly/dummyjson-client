@@ -27,6 +27,9 @@ final readonly class GuzzleHttpClient implements HttpClient
         private ClientInterface $client,
     ) {}
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public static function make(
         string $baseUri,
         array $options = [],
@@ -94,6 +97,7 @@ final readonly class GuzzleHttpClient implements HttpClient
             throw new InvalidApiResponseException('The remote API returned an unexpected payload.');
         }
 
+        /** @var array<string, mixed> $decoded */
         if ($statusCode >= 400) {
             $this->throwForStatus($statusCode);
         }
@@ -124,8 +128,8 @@ final readonly class GuzzleHttpClient implements HttpClient
                 $exception,
             ),
 
-            $exception instanceof RequestException && $exception->hasResponse() => $this->throwForStatus(
-                $exception->getResponse()->getStatusCode(),
+            $exception instanceof RequestException && ($response = $exception->getResponse()) !== null => $this->throwForStatus(
+                $response->getStatusCode(),
             ),
 
             default => new ApiTransportException(
