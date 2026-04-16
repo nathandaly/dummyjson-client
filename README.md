@@ -316,3 +316,4 @@ With more time, there are a few areas I would extend:
 - Add a built-in health check command or cron-friendly job that could call the remote endpoint and alert if DummyJSON became unavailable.
 - Explore a richer domain model layer, with a shape that could be extended from or mapped into Laravel Eloquent models, Symfony entities, or another application's own model layer.
 - Explore configuration loading through `dotenv`, or provide a fluent configuration API that could be defined at the point the package is registered in Laravel, Symfony, or another consuming framework.
+- Add feature tests and smoke tests to cover higher-level package usage and provide confidence around the live API boundary without making the main unit suite depend on the remote service.
