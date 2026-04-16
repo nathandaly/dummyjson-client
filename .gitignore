@@ -5,3 +5,5 @@
 .cursor
 
 .DS_Store
+
+.phpunit.cache/
