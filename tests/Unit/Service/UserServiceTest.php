@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Service;
 
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
+use Natedaly\DummyjsonClient\Dto\UserCollection;
 use Natedaly\DummyjsonClient\Services\UserService;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -20,17 +21,17 @@ class UserServiceTest extends TestCase
             ->with('/users/1')
             ->willReturn([
                 'id' => 1,
-                'firstName' => 'Emily',
-                'lastName' => 'Johnson',
-                'email' => 'emily.johnson@x.com',
+                'firstName' => 'Shrinking',
+                'lastName' => 'Rae',
+                'email' => 'shrinking.rae@example.com',
             ]);
 
         $user = new UserService($client)->getUser(id: 1);
 
         $this->assertSame(1, $user->id);
-        $this->assertSame('Emily', $user->firstName);
-        $this->assertSame('Johnson', $user->lastName);
-        $this->assertSame('emily.johnson@x.com', $user->email);
+        $this->assertSame('Shrinking', $user->firstName);
+        $this->assertSame('Rae', $user->lastName);
+        $this->assertSame('shrinking.rae@example.com', $user->email);
     }
 
     #[Test]
@@ -50,8 +51,13 @@ class UserServiceTest extends TestCase
                 'limit' => 10,
             ]);
 
-        $result = new UserService($client)->getUsers(limit: 10, skip: 0);
+        $result = new UserService($client)
+            ->getUsers()
+            ->limit(10)
+            ->skip(0)
+            ->fetch();
 
+        $this->assertInstanceOf(UserCollection::class, $result);
         $this->assertCount(2, $result->users);
         $this->assertSame(208, $result->total);
         $this->assertSame(0, $result->skip);

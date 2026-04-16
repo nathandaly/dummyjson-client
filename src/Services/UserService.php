@@ -6,6 +6,7 @@ namespace Natedaly\DummyjsonClient\Services;
 
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
 use Natedaly\DummyjsonClient\Dto\UserDto;
+use Natedaly\DummyjsonClient\Query\UserQuery;
 use RuntimeException;
 
 final readonly class UserService
@@ -24,5 +25,10 @@ final readonly class UserService
         }
 
         return UserDto::fromArray($data);
+    }
+
+    public function getUsers(): UserQuery
+    {
+        return new UserQuery($this->client);
     }
 }
