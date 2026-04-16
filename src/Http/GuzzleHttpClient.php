@@ -64,7 +64,7 @@ final readonly class GuzzleHttpClient implements HttpClient
         try {
             $response = $this->client->request('POST', $uri, array_replace(
                 $options,
-                ['json' => $payload],
+                ['body' => $payload],
             ));
         } catch (GuzzleException $exception) {
             throw new ApiHttpException('Failed to call remote API.', 0, $exception);

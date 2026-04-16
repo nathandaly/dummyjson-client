@@ -26,7 +26,7 @@ class UserServiceTest extends TestCase
                 'email' => 'shrinking.rae@example.com',
             ]);
 
-        $user = new UserService($client)->getUser(id: 1);
+        $user = new UserService($client)->getById(id: 1);
 
         $this->assertSame(1, $user->id);
         $this->assertSame('Shrinking', $user->firstName);
@@ -52,7 +52,7 @@ class UserServiceTest extends TestCase
             ]);
 
         $result = new UserService($client)
-            ->getUsers()
+            ->get()
             ->limit(10)
             ->skip(0)
             ->fetch();
@@ -71,7 +71,25 @@ class UserServiceTest extends TestCase
     #[Test]
     public function it_created_a_user_and_returns_a_user_id(): void
     {
-        $this->assertTrue(true);
+        $client = $this->createMock(HttpClient::class);
+        $client->expects($this->once())
+            ->method('post')
+            ->with('/users/add')
+            ->willReturn([
+                'id' => 208,
+                'firstName' => 'Amber',
+                'lastName' => 'Bennett',
+                'email' => 'amber.bennet@example.com',
+            ]);
+
+        $result = new UserService($client)
+            ->create(
+                firstName: 'Amber',
+                lastName: 'Bennett',
+                email: 'amber.bennet@example.com'
+            );
+
+        $this->assertSame(208, $result->id);
     }
 
     #[Test]

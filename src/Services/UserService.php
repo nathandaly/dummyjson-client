@@ -16,7 +16,7 @@ final readonly class UserService
     ) {
     }
 
-    public function getUser(int $id): UserDto
+    public function getById(int $id): UserDto
     {
         $data = $this->client->get("/users/{$id}");
 
@@ -27,8 +27,19 @@ final readonly class UserService
         return UserDto::fromArray($data);
     }
 
-    public function getUsers(): UserQuery
+    public function get(): UserQuery
     {
         return new UserQuery($this->client);
+    }
+
+    public function create(string $firstName, string $lastName, string $email): UserDto
+    {
+        $data = $this->client->post('/users/add', ['body' => [
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+        ]]);
+
+        return UserDto::fromArray($data);
     }
 }

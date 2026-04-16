@@ -33,7 +33,7 @@ final class UserQuery
 
         return $this;
     }
-    
+
     public function select(array $fields): self
     {
         $this->select = $fields;
