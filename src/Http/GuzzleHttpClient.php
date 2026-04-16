@@ -9,12 +9,16 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use http\Exception\RuntimeException;
 use JsonException;
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
-use Natedaly\DummyjsonClient\Exception\ApiConnectionException;
-use Natedaly\DummyjsonClient\Exception\ApiHttpException;
-use Natedaly\DummyjsonClient\Exception\InvalidResponseException;
+use Natedaly\DummyjsonClient\Exceptions\ApiAuthenticationException;
+use Natedaly\DummyjsonClient\Exceptions\ApiNotFoundException;
+use Natedaly\DummyjsonClient\Exceptions\ApiRateLimitException;
+use Natedaly\DummyjsonClient\Exceptions\ApiRequestException;
+use Natedaly\DummyjsonClient\Exceptions\ApiServerException;
+use Natedaly\DummyjsonClient\Exceptions\ApiTransportException;
+use Natedaly\DummyjsonClient\Exceptions\ApiValidationException;
+use Natedaly\DummyjsonClient\Exceptions\InvalidApiResponseException;
 use Throwable;
 
 final readonly class GuzzleHttpClient implements HttpClient
@@ -50,7 +54,7 @@ final readonly class GuzzleHttpClient implements HttpClient
                 ['query' => $query],
             ));
         } catch (GuzzleException $exception) {
-            $this->matchHttpException($exception);
+            $this->matchTransportException($exception);
         }
 
         return $this->decodeResponse(
@@ -64,10 +68,10 @@ final readonly class GuzzleHttpClient implements HttpClient
         try {
             $response = $this->client->request('POST', $uri, array_replace(
                 $options,
-                ['body' => $payload],
+                ['json' => $payload],
             ));
         } catch (GuzzleException $exception) {
-            throw new ApiHttpException('Failed to call remote API.', 0, $exception);
+            $this->matchTransportException($exception);
         }
 
         return $this->decodeResponse(
@@ -84,45 +88,50 @@ final readonly class GuzzleHttpClient implements HttpClient
         try {
             $decoded = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
-            throw new InvalidResponseException('The remote API returned invalid JSON.', 0, $exception);
+            throw new InvalidApiResponseException('The remote API returned invalid JSON.', null, $exception);
         }
 
         if (!is_array($decoded)) {
-            throw new InvalidResponseException('The remote API returned an unexpected payload.');
+            throw new InvalidApiResponseException('The remote API returned an unexpected payload.');
         }
 
-        // Just in case my exception matcher missed any above 400.
         if ($statusCode >= 400) {
-            throw new ApiHttpException(sprintf('Remote API returned HTTP %d.', $statusCode), $statusCode);
+            $this->throwForStatus($statusCode);
         }
 
         return $decoded;
     }
 
-    private function matchHttpException(Throwable $exception): void
+    private function throwForStatus(int $statusCode): never
     {
-        match (true) {
-            $exception instanceof ConnectException => throw new ApiConnectionException(
+        $message = sprintf('Remote API returned HTTP %d.', $statusCode);
+
+        throw match (true) {
+            $statusCode === 401, $statusCode === 403 => new ApiAuthenticationException($message, $statusCode),
+            $statusCode === 404 => new ApiNotFoundException($message, $statusCode),
+            $statusCode === 422 => new ApiValidationException($message, $statusCode),
+            $statusCode === 429 => new ApiRateLimitException($message, $statusCode),
+            $statusCode >= 500 => new ApiServerException($message, $statusCode),
+            default => new ApiRequestException($message, $statusCode),
+        };
+    }
+
+    private function matchTransportException(Throwable $exception): never
+    {
+        throw match (true) {
+            $exception instanceof ConnectException => new ApiTransportException(
                 $exception->getMessage(),
-                0,
+                null,
                 $exception,
             ),
 
-            $exception instanceof RequestException && $exception->hasResponse() => throw new ApiHttpException(
-                $exception->getResponse()->getReasonPhrase(),
+            $exception instanceof RequestException && $exception->hasResponse() => $this->throwForStatus(
                 $exception->getResponse()->getStatusCode(),
-                $exception,
             ),
 
-            $exception instanceof GuzzleException => throw new ApiHttpException(
+            default => new ApiTransportException(
                 'Failed to call remote API.',
-                0,
-                $exception,
-            ),
-
-            default => throw new RuntimeException(
-                $exception->getMessage(),
-                0,
+                null,
                 $exception,
             ),
         };

@@ -12,10 +12,9 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use JsonException;
-use Natedaly\DummyjsonClient\Exception\ApiConnectionException;
-use Natedaly\DummyjsonClient\Exception\ApiHttpException;
-use Natedaly\DummyjsonClient\Exception\ApiNotFoundException;
-use Natedaly\DummyjsonClient\Exception\InvalidResponseException;
+use Natedaly\DummyjsonClient\Exceptions\ApiNotFoundException;
+use Natedaly\DummyjsonClient\Exceptions\ApiTransportException;
+use Natedaly\DummyjsonClient\Exceptions\InvalidApiResponseException;
 use Natedaly\DummyjsonClient\Http\GuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -203,8 +202,8 @@ final class GuzzleHttpClientTest extends TestCase
 
         $httpClient = new GuzzleHttpClient($client);
 
-        $this->expectException(ApiHttpException::class);
-        $this->expectExceptionMessage('Not Found');
+        $this->expectException(ApiNotFoundException::class);
+        $this->expectExceptionMessage('Remote API returned HTTP 404.');
 
         $httpClient->get('/users/999');
     }
@@ -229,7 +228,7 @@ final class GuzzleHttpClientTest extends TestCase
 
         $httpClient = new GuzzleHttpClient($client);
 
-        $this->expectException(InvalidResponseException::class);
+        $this->expectException(InvalidApiResponseException::class);
         $this->expectExceptionMessage('The remote API returned invalid JSON.');
 
         $httpClient->get('/users/1');
@@ -254,7 +253,7 @@ final class GuzzleHttpClientTest extends TestCase
 
         $httpClient = new GuzzleHttpClient($client);
 
-        $this->expectException(ApiConnectionException::class);
+        $this->expectException(ApiTransportException::class);
         $this->expectExceptionMessage('Connection timed out');
 
         $httpClient->get('/users/1');
@@ -280,7 +279,7 @@ final class GuzzleHttpClientTest extends TestCase
 
         $httpClient = new GuzzleHttpClient($client);
 
-        $this->expectException(InvalidResponseException::class);
+        $this->expectException(InvalidApiResponseException::class);
         $this->expectExceptionMessage('The remote API returned an unexpected payload.');
 
         $httpClient->get('/users/1');

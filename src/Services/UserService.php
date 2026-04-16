@@ -6,8 +6,8 @@ namespace Natedaly\DummyjsonClient\Services;
 
 use Natedaly\DummyjsonClient\Contracts\HttpClient;
 use Natedaly\DummyjsonClient\Dto\UserDto;
+use Natedaly\DummyjsonClient\Exceptions\ApiNotFoundException;
 use Natedaly\DummyjsonClient\Query\UserQuery;
-use RuntimeException;
 
 final readonly class UserService
 {
@@ -21,7 +21,7 @@ final readonly class UserService
         $data = $this->client->get("/users/{$id}");
 
         if (empty($data)) {
-            throw new RuntimeException('User not found');
+            throw new ApiNotFoundException('User not found');
         }
 
         return UserDto::fromArray($data);
@@ -34,11 +34,11 @@ final readonly class UserService
 
     public function create(string $firstName, string $lastName, string $email): UserDto
     {
-        $data = $this->client->post('/users/add', ['body' => [
+        $data = $this->client->post('/users/add', [
             'firstName' => $firstName,
             'lastName' => $lastName,
             'email' => $email,
-        ]]);
+        ]);
 
         return UserDto::fromArray($data);
     }
